@@ -1,8 +1,12 @@
 <?php
 
+require_once "./app/db.php";
+
 function showTasks()
 {
     include "./templates/header.php";
-    echo "Aca estoy listando las tareas";
+
+    getAllTasks();
+
     include "./templates/footer.php";
 }
