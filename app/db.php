@@ -19,3 +19,14 @@ function getAllTasks()
     //4 - Cerramos la conexion [existe pero lo hace solo PDO];
     return $tasks;
 }
+
+function insertarTask($titulo, $descripcion, $prioridad, $finalizada)
+{
+    $db = new PDO('mysql:host=localhost;' . 'dbname=db_task;charset=utf8', 'root', '');
+
+    $query = $db->prepare('INSERT INTO task(titulo, descripcion, prioridad, finalizada) VALUES (?, ?, ?,?)');
+    $query->execute([$titulo, $descripcion, $prioridad, $finalizada]);
+
+    // 3. Obtengo y devuelo el ID de la tarea nueva
+    return $db->lastInsertId();
+}
