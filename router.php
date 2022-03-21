@@ -19,6 +19,12 @@ switch ($params[0]) {
     case 'insertar':
         addTask();
         break;
+    case 'borrar':
+        delTask($params[1]);
+        break;
+    case 'completar':
+        completeTask($params[1]);
+        break;
     default:
         echo "Pagina no encontrada";
 }

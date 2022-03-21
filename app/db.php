@@ -12,7 +12,16 @@ function getAllTasks()
     $tasks = $query->fetchAll(PDO::FETCH_OBJ); // obtengo un arreglo con TODAS las tareas
     echo "<ul class='list-group mt-5'>";
     foreach ($tasks as $task) {
-        echo "<li class ='list-group-item'> $task->titulo - $task->prioridad </li>";
+        if ($task->finalizada) {
+            echo "<li class ='list-group-item-success'> $task->titulo - $task->prioridad - 
+                    <a class='btn btn-outline-primary text-decoration-none' href='borrar/$task->id'>Borrar</a>
+                    </li>";
+        } else {
+            echo "<li class ='list-group-item'> $task->titulo - $task->prioridad - 
+                        <a class='btn btn-outline-primary text-decoration-none' href='borrar/$task->id'>Borrar</a>
+                        <a class='btn btn-outline-secondary text-decoration-none' href='completar/$task->id'>Completar</a>
+                    </li>";
+        }
     }
     echo "</ul>";
 
@@ -24,9 +33,25 @@ function insertarTask($titulo, $descripcion, $prioridad, $finalizada)
 {
     $db = new PDO('mysql:host=localhost;' . 'dbname=db_task;charset=utf8', 'root', '');
 
-    $query = $db->prepare('INSERT INTO task(titulo, descripcion, prioridad, finalizada) VALUES (?, ?, ?,?)');
+    $query = $db->prepare('INSERT INTO task(titulo, descripcion, prioridad, finalizada) VALUES (?, ?, ?, ?)');
     $query->execute([$titulo, $descripcion, $prioridad, $finalizada]);
 
     // 3. Obtengo y devuelo el ID de la tarea nueva
     return $db->lastInsertId();
+}
+
+function deleteTask($id)
+{
+    $db = new PDO('mysql:host=localhost;' . 'dbname=db_task;charset=utf8', 'root', '');
+
+    $query = $db->prepare('DELETE FROM task WHERE id = ?');
+    $query->execute([$id]);
+}
+
+function updateTask($id) {
+    $db = new PDO('mysql:host=localhost;' . 'dbname=db_task;charset=utf8', 'root', '');
+
+    $query = $db->prepare('UPDATE task SET finalizada = 1 WHERE id=?');
+    $query->execute([$id]);
+    
 }
